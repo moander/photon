@@ -159,7 +159,7 @@ $(PHOTON_STAGE):
 	@echo "Building LOGS folder..."
 	@test -d $(PHOTON_LOGS_DIR) || $(MKDIR) -p $(PHOTON_LOGS_DIR)
 
-clean: clean-install clean-chroot
+clean: clean-install clean-chroot clean-logs
 	@echo "Deleting Photon ISO..."
 	@$(RM) -f $(PHOTON_STAGE)/photon.iso
 	@echo "Deleting stage dir..."
@@ -183,6 +183,13 @@ clean-chroot:
 		cd $(PHOTON_PKG_BUILDER_DIR) && \
 		$(PHOTON_CHROOT_CLEANER) $(PHOTON_CHROOT_PATH); \
 	fi
+
+clean-logs:
+	@echo "Cleaning log files..."
+	@if [ -d $(PHOTON_LOGS_DIR) ]; then \
+		$(FIND) $(PHOTON_LOGS_DIR) -name "*.log" -type f -delete; \
+	fi
+	$(RMDIRSAFE) $(PHOTON_LOGS_DIR)
 
 photon-build-machine: check-packer check-vagrant
 	@echo "Building photon-build-machine with Packer..."
